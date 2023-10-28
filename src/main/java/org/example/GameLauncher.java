@@ -4,6 +4,6 @@ import java.util.Scanner;
 
 public class GameLauncher {
     public void startGame(String mapContent){
-        Scanner scanner = new Scanner(System.in);
+        System.out.println("Not yet implemented");
     }
 }
