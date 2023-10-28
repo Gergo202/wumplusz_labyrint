@@ -44,7 +44,6 @@ public class MapCreator {
                 if(placeY != 1 && placeX != 1) {
                     switch (elemChoice) {
                         case 1:
-                            System.out.println("Place:");
                             addElement(map, placeX, placeY, "WALL");
                             break;
                         case 2:
@@ -102,19 +101,19 @@ public class MapCreator {
                         symbol = "→";
                     }
                     switch (element) {
-                        case "EMPTY":
-                            symbol = "-";
+                        case "_":
+                            symbol = "_";
                             break;
-                        case "WALL":
+                        case "W":
                             symbol = "+";
                             break;
-                        case "PIT":
+                        case "P":
                             symbol = "O";
                             break;
-                        case "WUMPUS":
+                        case "M":
                             symbol = "M";
                             break;
-                        case "GOLD":
+                        case "G":
                             symbol = "*";
                             break;
                     }
