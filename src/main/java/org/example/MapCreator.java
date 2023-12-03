@@ -1,6 +1,7 @@
 package org.example;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
@@ -13,7 +14,7 @@ public class MapCreator {
         int wumpusCount = 2;
         int goldCount = 1;
 
-        String[][] map = initMap(N);
+        char[][] map = initMap(N);
 
         int heroX = 1;
         int heroY = 1;
@@ -41,17 +42,17 @@ public class MapCreator {
                 int placeX = scanner.nextInt();
                 System.out.println("Y=");
                 int placeY = scanner.nextInt();
-                if(placeY != 1 && placeX != 1) {
+                if(placeY != 1 && placeX != 1 && placeX < 10 && placeY < 10) {
                     switch (elemChoice) {
                         case 1:
-                            addElement(map, placeX, placeY, "WALL");
+                            addElement(map, placeX, placeY, 'W');
                             break;
                         case 2:
-                            addElement(map, placeX, placeY, "PIT");
+                            addElement(map, placeX, placeY, 'P');
                             break;
                         case 3:
                             if (wumpusCount > 0) {
-                                addElement(map, placeX, placeY, "WUMPUS");
+                                addElement(map, placeX, placeY, 'M');
                                 wumpusCount--;
                             } else {
                                 System.out.println("No more wumpus you can add.");
@@ -59,7 +60,7 @@ public class MapCreator {
                             break;
                         case 4:
                             if (goldCount > 0) {
-                                addElement(map, placeX, placeY, "GOLD");
+                                addElement(map, placeX, placeY, 'G');
                                 goldCount--;
                             } else {
                                 System.out.println("No more gold you can add.");
@@ -80,7 +81,7 @@ public class MapCreator {
             } else if (choice == 3) {
                 System.out.println("Enter the map name: ");
                 String filename = scanner.next();
-                saveMapToFile(map, filename);
+                saveMapToFile(map, filename + ".txt");
                 break;
             } else {
                 System.out.println("Wrong option.");
@@ -90,32 +91,26 @@ public class MapCreator {
         System.out.println("Quiting map creator.");
     }
 
-    public static void saveMapToFile(String[][] map, String filename) {
+    public static void saveMapToFile(char[][] map, String filename) {
         String directory = "saved_maps/";
+        File directoryFile = new File(directory);
+        if (!directoryFile.exists()) {
+            if (directoryFile.mkdirs()) {
+                System.out.println("Directory didn't exist, creating one");
+            } else {
+                System.out.println("Directory didn't exist, failed to create it");
+                return;
+            }
+        }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(directory + filename))) {
             for (int i = 0; i < map.length; i++) {
                 for(int j = 0; j < map[i].length; j++) {
-                    String element = map[i][j];
-                    String symbol = "";
+                    char element = map[i][j];
+                    char symbol = ' ';
                     if (i ==1 && j == 1){
-                        symbol = "→";
-                    }
-                    switch (element) {
-                        case "_":
-                            symbol = "_";
-                            break;
-                        case "W":
-                            symbol = "+";
-                            break;
-                        case "P":
-                            symbol = "O";
-                            break;
-                        case "M":
-                            symbol = "M";
-                            break;
-                        case "G":
-                            symbol = "*";
-                            break;
+                        symbol = '→';
+                    }  else {
+                        symbol = getElementSymbol(element);
                     }
                     writer.write(symbol);
                 }
@@ -127,22 +122,22 @@ public class MapCreator {
         }
     }
 
-    public static String[][] initMap(int N) {
-        String[][] map = new String[N][N];
+    public static char[][] initMap(int N) {
+        char[][] map = new char[N][N];
 
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
                 if (i == 0 || j == 0 || i == N - 1|| j == N - 1) {
-                    map[i][j] = "WALL";
+                    map[i][j] = 'W';
                 } else {
-                    map[i][j] = "EMPTY";
+                    map[i][j] = ' ';
                 }
             }
         }
         return map;
     }
 
-    public static void drawMap(String[][] map,int N, int heroX, int heroY, char heroDirection) {
+    public static void drawMap(char[][] map,int N, int heroX, int heroY, char heroDirection) {
         for(int i = 0; i < N; i++) {
             for(int j = 0; j < N; j++) {
                 if (i == heroY && j == heroX) {
@@ -155,26 +150,26 @@ public class MapCreator {
         }
     }
 
-    public static String getElementSymbol(String element) {
+    public static char getElementSymbol(char element) {
         switch (element) {
-            case "WALL":
-                return "W";
-            case "PIT":
-                return "P";
-            case "WUMPUS":
-                return "M";
-            case "GOLD":
-                return "G";
+            case 'W':
+                return '+';
+            case 'P':
+                return 'O';
+            case 'M':
+                return 'M';
+            case 'G':
+                return '*';
             default:
-                return "_";
+                return '_';
         }
     }
 
-    public static void addElement(String[][] map, int placeX, int placeY, String elem) {
+    public static void addElement(char[][] map, int placeX, int placeY, char elem) {
         if (placeX >= 1 && placeX <= map.length - 2 && placeY >= 1 && placeY <= map[0].length - 2) {
-            if(map[placeY][placeX] == "EMPTY") {
+            if(map[placeY][placeX] == ' ') {
                 map[placeY][placeX] = elem;
-            } else if (map[placeY][placeX].equals(elem)) {
+            } else if (map[placeY][placeX] == elem) {
                 System.out.println("Same element");
             } else if (placeX == 1 && placeY == 1) {
                 System.out.println("There is the hero, place somewhere else");
@@ -184,9 +179,9 @@ public class MapCreator {
         }
     }
 
-    public static void removeElement(String[][] map, int placeX, int placeY) {
-        if(map[placeX][placeY] != "EMPTY"){
-            map[placeX][placeY] = "EMPTY";
+    public static void removeElement(char[][] map, int placeX, int placeY) {
+        if(map[placeX][placeY] != ' '){
+            map[placeX][placeY] = ' ';
         } else if(placeX == 1 && placeY == 1) {
             System.out.println("Can't delete it, it is the hero.");
         } else {

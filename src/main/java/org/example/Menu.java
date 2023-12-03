@@ -3,23 +3,24 @@ package org.example;
 import java.util.Scanner;
 
 public class Menu {
-    private String selectedMap = null;
+    private char[][] selectedMap = new char[10][10];
     public void showMenu() {
+        Highscore highscore = new Highscore();
         Scanner scanner = new Scanner(System.in);
         System.out.print("Please input username: ");
         String username = scanner.nextLine();
+        highscore.usernameToDatabase(username);
 
         boolean exit = false;
         MapCreator mapCreator = new MapCreator();
         MapOpen mapOpen = new MapOpen();
-        GameLauncher gameLauncher = new GameLauncher();
+        Game game = new Game();
 
         while (!exit) {
             System.out.println("1. Map creator");
             System.out.println("2. Saved maps");
-            System.out.println("3. Load");
-            System.out.println("4. Play");
-            System.out.println("5. Quit");
+            System.out.println("3. Play");
+            System.out.println("4. Quit");
 
             int choice = scanner.nextInt();
 
@@ -33,17 +34,14 @@ public class Menu {
                     selectedMap = mapOpen.mapOpen();
                     break;
                 case 3:
-                    System.out.println("Load option didn't implemented.");
-                    break;
-                case 4:
                     if (selectedMap != null) {
                         System.out.println("Starting game...");
-                        gameLauncher.startGame(selectedMap);
+                        game.playGame(selectedMap);
                     } else {
                         System.out.println("Please chose map first in the Saved maps menu.");
                     }
                     break;
-                case 5:
+                case 4:
                     exit = true;
                     break;
                 default:
