@@ -1,7 +1,15 @@
 package org.example;
 
-public class Main {
-    public static void main(String[] args) {
+/**
+ * The main class for the applicetion.
+ */
+public final class Main {
+    /**
+     * The main method that starts the application.
+     *
+     * @param args The command line arguments.
+     */
+    private static void main(final String[] args) {
         Menu showMenu = new Menu();
         showMenu.showMenu();
     }

@@ -2,26 +2,70 @@ package org.example;
 
 import java.util.Scanner;
 
+/** The Game class represents the main game logic. */
+
 public class Game {
+    /** Where the player is looking. */
     private char lookNow;
+
+    /** Get the lookNow. */
+    public char getLookNow() {
+        return lookNow;
+    }
+
+    /** Where the player is in the X coordinate. */
     private int heroXNow;
+
+    /** Get the heroXNow. */
+    public int getHeroXNow() {
+        return heroXNow;
+    }
+
+    /** Where the player is in the Y coordinate. */
     private int heroYNow;
+
+    /** Get the heroYNow. */
+    public int getHeroYNow() {
+        return heroYNow;
+    }
+
+    /** Put the last X coordinate. */
     private int pastHeroX;
+
+    /** Get the pastHeroX. */
+    public int getPastHeroX() {
+        return pastHeroX;
+    }
+
+    /** Put the last Y coordinate. */
     private int pastHeroY;
+
+    /** Get the pastHeroY. */
+    public int getPastHeroY() {
+        return pastHeroY;
+    }
+
+    /** The flag indicate whether Wumpus is alive. */
     private boolean wumpusAlive;
-    public void playGame(char[][] mapContent){
+
+    /**
+     * Plays the game based on the provided map content.
+     *
+     * @param mapContent The 2D array representing the game map.
+     */
+    public void playGame(final char[][] mapContent) {
         Player player = new Player();
         Arrows arrows = new Arrows();
         Highscore highscore = new Highscore();
         boolean exit = false;
         Scanner scanner = new Scanner(System.in);
 
-
-        while (isWumpusAlive(wumpusAlive, mapContent) && !exit){
-            for (int i = 0; i < mapContent.length; i++){
-                for (int j = 0; j < mapContent[i].length; j++){
+        while (isWumpusAlive(wumpusAlive, mapContent) && !exit) {
+            for (int i = 0; i < mapContent.length; i++) {
+                for (int j = 0; j < mapContent[i].length; j++) {
                     if (mapContent[i][j] == '→' || mapContent[i][j] == '↓'
-                            || mapContent[i][j] == '←' || mapContent[i][j] == '↑') {
+                            || mapContent[i][j] == '←'
+                            || mapContent[i][j] == '↑') {
                         heroXNow = i;
                         heroYNow = j;
                         lookNow = mapContent[i][j];
@@ -48,13 +92,17 @@ public class Game {
             String button = scanner.nextLine();
 
             switch (button) {
-                case "w", "s":
+                case "w":
+                case "s":
                     pastHeroX = heroXNow;
                     pastHeroY = heroYNow;
-                    mapContent[heroXNow][heroYNow] = player.move(lookNow, button, mapContent, heroXNow, heroYNow);
+                    mapContent[heroXNow][heroYNow] =
+                            player.move(lookNow, button, mapContent,
+                                    heroXNow, heroYNow);
 
                     break;
-                case "a", "d":
+                case "a":
+                case "d":
                     lookNow = player.lookChange(lookNow, button);
                     mapContent[heroXNow][heroYNow] = lookNow;
                     break;
@@ -97,6 +145,7 @@ public class Game {
                             }
                         }
                     }
+                    break;
                 case "1":
                     System.out.println("Quiting...");
                     exit = true;
@@ -105,7 +154,6 @@ public class Game {
                     System.out.println("Invalid choice!");
                     break;
             }
-
             wumpusAlive = isWumpusAlive(wumpusAlive, mapContent);
 
         }
@@ -115,14 +163,32 @@ public class Game {
             highscore.writeScore();
         }
     }
-    public boolean isWumpusAlive(boolean wumpusAlive, char mapContent[][]){
-        for (int i = 0; i < 10; i++){
-            for (int j = 0; j < 10; j++){
-                if (mapContent[i][j] == 'M'){
-                    wumpusAlive = true;
+
+    /** Get the wumpusAlive. */
+
+    public boolean isWumpusAlive() {
+        return wumpusAlive;
+    }
+
+    /**
+     * Checks if Wumpus is alive on the game map.
+     *
+     * @param isWumpusAlive Flag indicating whether the Wumpus is alive.
+     *
+     * @param mapContent The 2D array representing the game map.
+     *
+     * @return True if the Wumpus is alive, false otherwise.
+     */
+
+    public boolean isWumpusAlive(final boolean isWumpusAlive, final char[][] mapContent) {
+        boolean newWumpusAlive = isWumpusAlive;
+        for (int i = 0; i < mapContent.length; i++) {
+            for (int j = 0; j < mapContent[i].length; j++) {
+                if (mapContent[i][j] == 'M') {
+                    newWumpusAlive = true;
                 }
             }
         }
-        return wumpusAlive;
+        return newWumpusAlive;
     }
 }

@@ -4,9 +4,18 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 
+/**
+ * The class mapOpen deal with the file read in.
+ */
 public class MapOpen {
-    public char[][] mapOpen(){
-        Scanner scanner = new Scanner(System.in);
+    /**
+     * Read the saved maps and save into another array.
+     *
+     * @return When finished return to Menu class.
+     */
+    public char[][] mapOpen() {
+        Scanner scanner = null;
+        scanner = new Scanner(System.in);
         File savedMapsDirectory = new File("saved_maps");
         File[] mapFiles = savedMapsDirectory.listFiles();
 
@@ -34,7 +43,15 @@ public class MapOpen {
         }
         return null;
     }
-     private char[][] readMapFile(File file) {
+
+    /**
+     * Reads the content of the file and turn it into an array.
+     *
+     * @param file Map file to be read.
+     *
+     * @return Map 2D array or null when an error happen.
+     */
+    public char[][] readMapFile(final File file) {
         try {
             Scanner fileScanner = new Scanner(file);
             StringBuilder mapContent = new StringBuilder();
@@ -53,5 +70,5 @@ public class MapOpen {
             System.out.println("Error with the reading: " + e.getMessage());
             return null;
         }
-     }
+    }
 }

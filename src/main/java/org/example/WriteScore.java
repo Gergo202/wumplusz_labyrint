@@ -1,21 +1,39 @@
 package org.example;
 
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-
+/** Save and show the current scores. */
 public class WriteScore {
+    /** Contain the username. */
     private String names;
-    private int scores;
 
-    public WriteScore(String names, int scores) {
-        this.names = names;
-        this.scores = scores;
+    /** Get the names. */
+    public String getNames() {
+        return names;
     }
 
+    /** Contain the score. */
+    private int scores;
+
+    /** Get the scores. */
+    public int getScores() {
+        return scores;
+    }
+
+    /**
+     * WriteScore's construction.
+     *
+     * @param userName Get the username.
+     *
+     * @param finalScore Get the score the player got.
+     */
+    public WriteScore(final String userName, final int finalScore) {
+        this.names = userName;
+        this.scores = finalScore;
+    }
+
+    /** Will write the name and the score. */
     @Override
     public String toString() {
-        return "Username: '" + names + '\'' +
-                " Highscores: " + scores;
+        return "Username: '" + names + '\''
+                + " Highscores: " + scores;
     }
 }

@@ -1,99 +1,141 @@
 package org.example;
 
+/** Handle the movement of the player. */
 public class Player {
-    Arrows arrows = new Arrows();
+    /** Contain the hero's X location. */
     private int heroX;
-    private int heroY;
-    private char look;
-    private String input;
-    private int newHeroX;
-    private int newHeroY;
 
+    /** Contain the hero's Y location. */
+    private int heroY;
+
+    /** Get the heroX location. */
     public int getHeroX() {
         return heroX;
     }
 
+    /** Get the heroY location. */
     public int getHeroY() {
         return heroY;
     }
 
-    public char getLook() { return look; }
+    /** Use the key's input. */
+    private String input;
 
-    public String getInput() { return input; }
-
-    public void setHeroX(int heroX) {
-        this.heroX = heroX;
+    /** Get the input. */
+    public String getInput() {
+        return input;
     }
 
-    public void setHeroY(int heroY) {
-        this.heroY = heroY;
+    /** New player's X location. */
+    private int currentX;
+
+    /** Get the currentX. */
+    public int getCurrentX() {
+        return currentX;
     }
 
-    public void setLook(char look) {
-        this.look = look;
+    /** New player's Y location. */
+    private int currentY;
+
+    /** Get the currentY. */
+    public int getCurrentY() {
+        return currentY;
     }
 
-    public void setInput(String input) {
-        this.input = input;
-    }
-    public char lookChange(char look, String input) {
-        switch (input) {
-            case "a" -> {
-                return switch (look) {
-                    case '→' -> '↑';
-                    case '↑' -> '←';
-                    case '←' -> '↓';
-                    case '↓' -> '→';
-                    default -> look;
-                };
-            }
-            case "d" -> {
-                return switch (look) {
-                    case '→' -> '↓';
-                    case '↓' -> '←';
-                    case '←' -> '↑';
-                    case '↑' -> '→';
-                    default -> look;
-                };
-            }
-            default -> {
-                return look;
-            }
+    /**
+     * Manages the player changing facing.
+     *
+     * @param facing Where the player is looking now.
+     *
+     * @param keyInput Key input.
+     *
+     * @return New look.
+     */
+    public char lookChange(final char facing, final String keyInput) {
+        switch (keyInput) {
+            case "a":
+                switch (facing) {
+                    case '→':
+                        return '↑';
+                    case '↑':
+                        return '←';
+                    case '←':
+                        return '↓';
+                    case '↓':
+                        return '→';
+                    default:
+                        return facing;
+                }
+            case "d":
+                switch (facing) {
+                    case '→':
+                        return '↓';
+                    case '↓':
+                        return '←';
+                    case '←':
+                        return '↑';
+                    case '↑':
+                        return '→';
+                    default:
+                        return facing;
+                }
+            default:
+                return facing;
         }
     }
 
-    public char move(char look, String input, char[][] mapContent, int heroX, int heroY) {
-        newHeroX = heroX;
-        newHeroY = heroY;
-        switch (input) {
-            case "w" -> {
-                if (look == '→') {
-                    newHeroY++;
-                } else if (look == '↓') {
-                    newHeroX++;
-                } else if (look == '←') {
-                    newHeroY--;
+    /**
+     * Manages the movement.
+     *
+     * @param facing Where the player is facing.
+     *
+     * @param keyInput Key input.
+     *
+     * @param mapContent What the map has.
+     *
+     * @param locationX Hero's X location.
+     *
+     * @param locationY Hero's Y location.
+     *
+     * @return New coordination of the player.
+     */
+    public char move(final char facing, final String keyInput,
+                     final char[][] mapContent,
+                     final int locationX, final int locationY) {
+        currentX = locationX;
+        currentY = locationY;
+        switch (keyInput) {
+            case "w":
+                if (facing == '→') {
+                    currentY++;
+                } else if (facing == '↓') {
+                    currentX++;
+                } else if (facing == '←') {
+                    currentY--;
                 } else {
-                    newHeroX--;
+                    currentX--;
                 }
-            }
-            case "s" -> {
-                if (look == '→') {
-                    newHeroY--;
-                } else if (look == '↓') {
-                    newHeroX--;
-                } else if (look == '←') {
-                    newHeroY++;
+                break;
+            case "s":
+                if (facing == '→') {
+                    currentY--;
+                } else if (facing == '↓') {
+                    currentX--;
+                } else if (facing == '←') {
+                    currentY++;
                 } else {
-                    newHeroX++;
+                    currentX++;
                 }
+                break;
+            default:
+                break;
             }
-        }
 
-        if (isValidPosition(newHeroX, newHeroY, mapContent)) {
-            mapContent[newHeroX][newHeroY] = look;
-            heroX = newHeroX;
-            heroY = newHeroY;
+
+        if (isValidPosition(currentX, currentY, mapContent)) {
+            mapContent[currentX][currentY] = facing;
+            heroX = currentX;
+            heroY = currentY;
         }
 
         Highscore highscore = new Highscore();
@@ -102,11 +144,26 @@ public class Player {
         return mapContent[heroX][heroY];
     }
 
-    public boolean isValidPosition(int placeX, int placeY, char[][] mapContent) {
+    /**
+     * Search if the player can move into the new place.
+     *
+     * @param placeX Next X coordination.
+     *
+     * @param placeY Next Y Coordination.
+     *
+     * @param mapContent Hold the map's content.
+     *
+     * @return New location's content.
+     */
+    public boolean isValidPosition(
+            final int placeX, final int placeY,
+            final char[][] mapContent) {
+        Arrows arrows = new Arrows();
         if (mapContent[placeX][placeY] == 'O') {
             arrows.loseArrow();
         }
 
-        return mapContent[placeX][placeY] == '_' || mapContent[placeX][placeY] == '*';
+        return mapContent[placeX][placeY] == '_'
+                || mapContent[placeX][placeY] == '*';
     }
 }
