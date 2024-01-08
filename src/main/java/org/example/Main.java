@@ -9,7 +9,7 @@ public final class Main {
      *
      * @param args The command line arguments.
      */
-    private static void main(final String[] args) {
+    public static void main(final String[] args) {
         Menu showMenu = new Menu();
         showMenu.showMenu();
     }
